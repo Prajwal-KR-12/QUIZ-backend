@@ -16,8 +16,16 @@ connectDB(); // Connect to MongoDB
 const app = express();
 
 // Middleware
+const allowedOrigins = ['http://localhost:3000', 'https://quiz-frontend-llcn.onrender.com'];
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json()); // parse JSON request bodies
